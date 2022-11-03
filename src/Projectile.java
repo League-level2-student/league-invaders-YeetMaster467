@@ -1,25 +1,26 @@
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
-public class Rocketship extends GameObject {
-
-	boolean up = false;
-	boolean down = false;
-	boolean left = false;
-	boolean right = false;
+public class Projectile extends GameObject {
 	public static BufferedImage image;
 	public static boolean needImage = true;
 	public static boolean gotImage = false;	
 
-	Rocketship(int x, int y, int width, int height) {
+	Projectile(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		speed = 10;
+		super.speed = 10;
 		if (needImage) {
-		    loadImage ("rocket.png");
+		    loadImage ("bullet.png");
+		}
+	}
+
+	void update() {
+		y -= speed;
+		if(y > LeagueInvaders.HEIGHT || y < 0) {
+			super.isActive = false;
 		}
 	}
 
@@ -27,23 +28,8 @@ public class Rocketship extends GameObject {
 		if (gotImage) {
 			g.drawImage(image, x, y, width, height, null);
 		} else {
-			g.setColor(Color.BLUE);
+			g.setColor(Color.RED);
 			g.fillRect(x, y, width, height);
-		}
-	}
-
-	void move() {
-		if (up && y - speed > 0) {
-			y -= speed;
-		}
-		if (down && y + speed < LeagueInvaders.HEIGHT - height) {
-			y += speed;
-		}
-		if (left && x - speed > 0) {
-			x -= speed;
-		}
-		if (right && x + speed < LeagueInvaders.WIDTH - width) {
-			x += speed;
 		}
 	}
 	
@@ -58,4 +44,5 @@ public class Rocketship extends GameObject {
 	        needImage = false;
 	    }
 	}
+
 }
