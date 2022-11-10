@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -145,6 +146,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			} else {
 				currentState++;
 				alienSpawn.stop();
+			}
+		}
+		
+		if(currentState == MENU) {
+			if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+				JOptionPane.showMessageDialog(null, "Use arrow keys to move and space to shoot.\nKill as many aliens as you can and try not to die.");
 			}
 		}
 
