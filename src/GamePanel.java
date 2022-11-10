@@ -27,6 +27,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public static BufferedImage image;
 	public static boolean needImage = true;
 	public static boolean gotImage = false;
+	Timer alienSpawn;
 
 	@Override
 	public void paintComponent(Graphics g) {
@@ -55,6 +56,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void updateGameState() {
 		rocket.move();
 		manager.update();
+		if(rocket.isActive == false) {
+			currentState = END;
+		}
 	}
 
 	void updateEndState() {
@@ -90,8 +94,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.BLACK);
 		g.drawString("Game Over", 100, 100);
 		g.setFont(normalFont);
-		g.drawString("You killed [ ] enemies", 100, 400);
+		g.drawString("You killed " + manager.getScore() + " enemies", 100, 400);
 		g.drawString("Press ENTER to restart", 100, 500);
+	}
+	
+	void startGame() {
+		alienSpawn = new Timer(1000, manager);
+		alienSpawn.start();
 	}
 
 	@Override
@@ -103,7 +112,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		} else if (currentState == END) {
 			updateEndState();
 		}
-		System.out.println("action");
 		repaint();
 	}
 	
@@ -129,8 +137,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			if (currentState == END) {
 				currentState = MENU;
+				rocket = new Rocketship(250, 700, 50, 50);
+				manager = new ObjectManager(rocket);
+			} else if (currentState == MENU) {
+				currentState++;
+				startGame();
 			} else {
 				currentState++;
+				alienSpawn.stop();
 			}
 		}
 
@@ -144,6 +158,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				rocket.left = true;
 			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				rocket.right = true;
+			} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				manager.addProjectile(rocket.getProjectile());
 			}
 
 		}
